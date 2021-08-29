@@ -331,7 +331,19 @@ void matrix_scan_user(void)
 }
 #endif // OLED_DRIVER_ENABLE
 
+// https://beta.docs.qmk.fm/using-qmk/advanced-keycodes/feature_macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+  // send control-alt-delete
+  case CADEL:
+      if (record->event.pressed) {
+          // when keycode is pressed
+          SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTRL));
+      } else {
+          // when keycode is released
+      }
+      break;
+  }
   if (record->event.pressed) {
 #ifdef OLED_DRIVER_ENABLE
     set_keylog(keycode, record);
