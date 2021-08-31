@@ -333,22 +333,34 @@ void matrix_scan_user(void)
 
 // https://beta.docs.qmk.fm/using-qmk/advanced-keycodes/feature_macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-  // send control-alt-delete
-  case CADEL:
-      if (record->event.pressed) {
-          // when keycode is pressed
-          SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTRL));
-      } else {
-          // when keycode is released
-      }
-      break;
-  }
-  if (record->event.pressed) {
+    switch (keycode) {
+        // send control-alt-delete
+        case CADEL:
+            // when keycode is pressed
+            if (record->event.pressed)
+                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTRL));
+            else { /* when keycode is released */ }
+            break;
+
+        case CSLEFT:
+            if (record->event.pressed)
+                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_LEFT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
+            else
+                // released
+            break;
+
+        case CSRIGHT:
+            if (record->event.pressed)
+                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_RIGHT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
+            else
+                // released
+            break;
+    }
+    if (record->event.pressed) {
 #ifdef OLED_ENABLE
-    set_keylog(keycode, record);
+        set_keylog(keycode, record);
 #endif
-    // set_timelog();
-  }
-  return true;
+        // set_timelog();
+    }
+    return true;
 }
