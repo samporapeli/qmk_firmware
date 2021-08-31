@@ -10,6 +10,8 @@ enum layer_number {
 
 enum custom_keycodes {
     CADEL = SAFE_RANGE,
+    CSLEFT,
+    CSRIGHT,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -63,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |      |      |      |      |                    |      | HOME | PGDN | PGUP | END  |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      |      |      |      |      |-------.    ,-------|      | Left | Down |  Up  |Right |      |
+ * |      |      |      |      |      |      |-------.    ,-------|  <-- | Left | Down |  Up  |Right | -->  |
  * |------+------+------+------+------+------|   {   |    |    }  |------+------+------+------+------+------|
  * |      |      |      |      |      |      |-------|    |-------|   +  |   -  |   =  |   [  |   ]  |   \  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
@@ -75,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT( \
   _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______,                     _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______, \
-  _______, _______, _______, _______, _______, _______,                       XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX, \
+  _______, _______, _______, _______, _______, _______,                      CSLEFT, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CSRIGHT, \
   _______, _______, _______, _______, _______, _______,   FI_LCBR, FI_RCBR,  FI_PLUS, FI_MINS, FI_EQL,  FI_LBRC, FI_RBRC, FI_BSLS, \
                              _______, _______, _______,  _______, _______,  _______, KC_DEL,  _______ \
 ),
@@ -144,22 +146,34 @@ void oled_task_user(void) {
 
 // https://beta.docs.qmk.fm/using-qmk/advanced-keycodes/feature_macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-  // send control-alt-delete
-  case CADEL:
-      if (record->event.pressed) {
-          // when keycode is pressed
-          SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTRL));
-      } else {
-          // when keycode is released
-      }
-      break;
-  }
-  if (record->event.pressed) {
+    switch (keycode) {
+        // send control-alt-delete
+        case CADEL:
+            // when keycode is pressed
+            if (record->event.pressed)
+                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTRL));
+            else { /* when keycode is released */ }
+            break;
+
+        case CSLEFT:
+            if (record->event.pressed)
+                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_LEFT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
+            else
+                // released
+            break;
+
+        case CSRIGHT:
+            if (record->event.pressed)
+                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_RIGHT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
+            else
+                // released
+            break;
+    }
+    if (record->event.pressed) {
 #ifdef OLED_ENABLE
-    set_keylog(keycode, record);
+        set_keylog(keycode, record);
 #endif
-    // set_timelog();
-  }
-  return true;
+        // set_timelog();
+    }
+    return true;
 }
