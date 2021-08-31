@@ -329,7 +329,7 @@ void matrix_scan_user(void)
         tap_code16(KC_MS_BTN1);
   }
 }
-#endif // OLED_DRIVER_ENABLE
+#endif // OLED_ENABLE
 
 // https://beta.docs.qmk.fm/using-qmk/advanced-keycodes/feature_macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -345,7 +345,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
   if (record->event.pressed) {
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
     set_keylog(keycode, record);
 #endif
     // set_timelog();
