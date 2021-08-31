@@ -35,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   FI_1,   FI_2,    FI_3,    FI_4,    FI_5,                     FI_6,    FI_7,    FI_8,    FI_9,    FI_0,    FI_PLUS, \
   KC_CAPS,   FI_ARNG,KC_COMM, KC_DOT,  KC_P,    KC_Y,                     KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    FI_QUOT, \
   KC_LCTRL, KC_A,   KC_O,    KC_E,    KC_U,    KC_I,                     KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    FI_MINS, \
-  KC_LSFT,  FI_ADIA,KC_Q,    KC_J,    KC_K,    KC_X, FI_ODIA, FI_LABK,   KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT, \
+    KC_LSFT,  FI_ADIA,KC_Q,    KC_J,    KC_K,    KC_X, FI_ODIA, MT(MOD_RCTL, FI_LABK),   KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT, \
                         KC_LALT, KC_LGUI, MO(_LOWER), KC_SPC, KC_ENT, MO(_RAISE), KC_BSPC, KC_ALGR \
 ),
 /* LOWER
