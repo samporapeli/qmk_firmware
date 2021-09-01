@@ -158,15 +158,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case CSLEFT:
             if (record->event.pressed)
                 SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_LEFT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
-            else
-                // released
+            else { /* when keycode is released */ }
             break;
 
         case CSRIGHT:
             if (record->event.pressed)
                 SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_RIGHT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
-            else
-                // released
+            else { /* when keycode is released */ }
             break;
     }
     if (record->event.pressed) {
