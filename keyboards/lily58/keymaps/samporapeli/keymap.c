@@ -12,7 +12,10 @@ enum custom_keycodes {
     CADEL = SAFE_RANGE,
     CSLEFT,
     CSRIGHT,
+    M1M1M1,
 };
+
+bool M1M1M1_active = false;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -46,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |  M1  |M Left|M Down| M Up |M Rght|  M2  |-------.    ,-------|   ^  |   &  |   *  |   (  |   )  |   -  |
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
- * |  M3  |      |      |      |      |      |-------|    |-------|   ~  |   _  |   +  |   {  |   }  |   |  |
+ * |  M3  |M1M1M1|      |      |      |      |-------|    |-------|   ~  |   _  |   +  |   {  |   }  |   |  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP|Alt Gr|
  *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -56,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
   KC_ESC,  KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_UP, KC_MS_WH_RIGHT, _______,                   FI_GRV,  FI_EXLM, FI_AT,   FI_HASH, FI_DLR,  FI_PERC, \
   KC_MS_BTN1,  KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP, KC_MS_RIGHT, KC_MS_BTN2,                   FI_CIRC, FI_AMPR, FI_ASTR, FI_LPRN, FI_RPRN, FI_TILD, \
-  KC_MS_BTN3, _______, _______, _______, _______, _______, _______, _______, FI_TILD, FI_UNDS, FI_PLUS, FI_LCBR, FI_RCBR, FI_PIPE, \
+  KC_MS_BTN3, M1M1M1, _______, _______, _______, _______, _______, _______, FI_TILD, FI_UNDS, FI_PLUS, FI_LCBR, FI_RCBR, FI_PIPE, \
                              _______, _______, _______, _______, _______, _______, _______, _______\
 ),
 /* RAISE
@@ -166,6 +169,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_RIGHT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
             else { /* when keycode is released */ }
             break;
+        case M1M1M1:
+            if (record->event.pressed)
+                M1M1M1_active = true;
+            else
+                M1M1M1_active = false;
+            break;
     }
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
@@ -174,4 +183,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // set_timelog();
     }
     return true;
+}
+
+void matrix_scan_user(void)
+{
+    if (M1M1M1_active)
+        tap_code16(KC_MS_BTN1);
 }
