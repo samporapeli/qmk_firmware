@@ -355,6 +355,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             else
                 // released
             break;
+        case M1M1M1:
+            if (record->event.pressed)
+                M1M1M1_active = true;
+            else
+                M1M1M1_active = false;
+            break;
     }
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
@@ -363,4 +369,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // set_timelog();
     }
     return true;
+}
+
+void matrix_scan_user(void)
+{
+    if (M1M1M1_active)
+        tap_code16(KC_MS_BTN1);
 }
