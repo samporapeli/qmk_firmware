@@ -31,23 +31,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* UNDERGLOW */
 
-// enabling the below #define would be neat, but unfortunately
-// there's not enough space for that
-
 // #define RGBLIGHT_ANIMATIONS
 
 // enable/disable effects by commenting
-
-// #define RGBLIGHT_EFFECT_ALTERNATING
-// #define RGBLIGHT_EFFECT_BREATHING
+#define RGBLIGHT_EFFECT_ALTERNATING
+#define RGBLIGHT_EFFECT_BREATHING
 // #define RGBLIGHT_EFFECT_CHRISTMAS
-// #define RGBLIGHT_EFFECT_KNIGHT
-// #define RGBLIGHT_EFFECT_RAINBOW_MOOD
-// #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+#define RGBLIGHT_EFFECT_KNIGHT
+#define RGBLIGHT_EFFECT_RAINBOW_MOOD
+#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
 // #define RGBLIGHT_EFFECT_RGB_TEST
-// #define RGBLIGHT_EFFECT_SNAKE
+#define RGBLIGHT_EFFECT_SNAKE
 #define RGBLIGHT_EFFECT_STATIC_GRADIENT
-// #define RGBLIGHT_EFFECT_TWINKLE
+#define RGBLIGHT_EFFECT_TWINKLE
 
 // total number of LEDs, 8 on each half
 #undef RGBLED_NUM
