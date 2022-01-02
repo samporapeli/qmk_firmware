@@ -29,21 +29,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 100
 
+/* UNDERGLOW */
+
+// enabling the below #define would be neat, but unfortunately
+// there's not enough space for that
+
+// #define RGBLIGHT_ANIMATIONS
+
+// enable/disable effects by commenting
+
+// #define RGBLIGHT_EFFECT_ALTERNATING
+// #define RGBLIGHT_EFFECT_BREATHING
+// #define RGBLIGHT_EFFECT_CHRISTMAS
+// #define RGBLIGHT_EFFECT_KNIGHT
+// #define RGBLIGHT_EFFECT_RAINBOW_MOOD
+// #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+// #define RGBLIGHT_EFFECT_RGB_TEST
+// #define RGBLIGHT_EFFECT_SNAKE
+#define RGBLIGHT_EFFECT_STATIC_GRADIENT
+// #define RGBLIGHT_EFFECT_TWINKLE
+
+// total number of LEDs, 8 on each half
 #undef RGBLED_NUM
-#define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 27
-#define RGBLIGHT_LIMIT_VAL 120
+#define RGBLED_NUM 16
+#define RGBLIGHT_SPLIT
+#define RGBLED_SPLIT { 8, 8 }
+// max brightness
+#define RGBLIGHT_LIMIT_VAL 255
+// steps for hue, saturation and brightness
 #define RGBLIGHT_HUE_STEP 10
 #define RGBLIGHT_SAT_STEP 17
 #define RGBLIGHT_VAL_STEP 17
-
-// Underglow
-/*
-#undef RGBLED_NUM
-#define RGBLED_NUM 14    // Number of LEDs
-#define RGBLIGHT_ANIMATIONS
+// shut down leds when host sleeps
 #define RGBLIGHT_SLEEP
-*/
 
 // mouse keys
 #define MOUSEKEY_INTERVAL 16
