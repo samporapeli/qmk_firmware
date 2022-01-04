@@ -65,3 +65,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_MOVE_DELTA 4
 #define MOUSEKEY_TIME_TO_MAX 80
 #define MOUSEKEY_MAX_SPEED 16
+
+// OLED
+#define OLED_BRIGHTNESS 120
+#define OLED_TIMEOUT 10000
+#define OLED_FADE_OUT
+#define OLED_FADE_OUT_INTERVAL 4
