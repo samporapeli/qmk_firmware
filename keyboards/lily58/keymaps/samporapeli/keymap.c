@@ -355,12 +355,69 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             else
                 // released
             break;
+
         case M1M1M1:
             if (record->event.pressed)
                 M1M1M1_active = true;
             else
                 M1M1M1_active = false;
             break;
+
+        #ifdef RGBLIGHT_ENABLE
+        // LED layer specials
+        // would be better with keycode macro like LED_H(hue_value)
+        case LED_RED:
+            rgblight_sethsv(0, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_YEL:
+            rgblight_sethsv(43, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_GRE:
+            rgblight_sethsv(85, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_CYA:
+            rgblight_sethsv(127, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_BLU:
+            rgblight_sethsv(169, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_MAG:
+            rgblight_sethsv(201, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_ORA:
+            rgblight_sethsv(21, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_CHA:
+            rgblight_sethsv(64, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_SPR:
+            rgblight_sethsv(106, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_AZU:
+            rgblight_sethsv(148, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_VLT:
+            rgblight_sethsv(180, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_RSE:
+            rgblight_sethsv(222, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_FLASH:
+            if (record->event.pressed) {
+                LED_FLASH_prev_value = rgblight_get_val();
+                rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), LED_FLASH_prev_value > 0 ? 0 : 255);
+            }
+            else {
+                rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), LED_FLASH_prev_value);
+            }
+            break;
+        case LED_MIN:
+            rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), 0);
+            break;
+        case LED_MAX:
+            rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), 255);
+            break;
+        #endif
     }
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
