@@ -14,9 +14,27 @@ enum custom_keycodes {
     CSLEFT,
     CSRIGHT,
     M1M1M1,
+    LED_RED,
+    LED_YEL,
+    LED_GRE,
+    LED_CYA,
+    LED_BLU,
+    LED_MAG,
+    LED_ORA,
+    LED_CHA,
+    LED_SPR,
+    LED_AZU,
+    LED_VLT,
+    LED_RSE,
+    LED_FLASH,
+    LED_MIN,
+    LED_MAX,
 };
 
 bool M1M1M1_active = false;
+#ifdef RGBLIGHT_ENABLE
+unsigned int LED_FLASH_prev_value = 0;
+#endif
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -86,25 +104,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              _______, _______, _______,  _______, _______,  _______, KC_DEL,  _______ \
 ),
 /* LEDS
+ * https://docs.qmk.fm/#/feature_rgblight?id=keycodes
+ *
  * ,-----------------------------------------.                    ,-----------------------------------------.
- * |      |STATIC|BREATH|RAINBW|SWIRL | SNEK |                    |KNIGHT| GRAD |TWNKLE|      |      |RGBTOG|
+ * |FLASH |STATIC| GRAD |SWIRL |RAINBW|BREATH|                    | SNEK |KNIGHT|TWNKLE|      |      |RGBTOG|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ * | RED  |YELLOW|GREEN | CYAN | BLUE |MGENTA|                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      |      |      |      |      |-------.    ,-------|      |      |      | HUE+ | SAT+ | VAL+ |
+ * |ORANGE|CHAGRE|SPRGRE|AZURE |VIOLET| ROSE |-------.    ,-------| MAX  |      |      | HUE+ | SAT+ | VAL+ |
  * |------+------+------+------+------+------|  PREV |    | NEXT  |------+------+------+------+------+------|
- * |LShift|      |      |      |      |      |-------|    |-------|      |      |      | HUE- | SAT- | VAL- |
+ * |LShift|      |      |      |      |      |-------|    |-------| MIN  |      |      | HUE- | SAT- | VAL- |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
+ *                   | LAlt | LGUI |LOWER | / CLOSE /       \CLOSE \  |RAISE |BackSP| RGUI |
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
   [_LEDS] = LAYOUT( \
-  XXXXXXX, RGB_M_P, RGB_M_B, RGB_M_R,RGB_M_SW, RGB_M_SN,                  RGB_M_K, RGB_M_G, RGB_M_TW,XXXXXXX, XXXXXXX, RGB_TOG, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, RGB_HUI, RGB_SAI, RGB_VAI, \
-  KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_MOD, RGB_RMOD, XXXXXXX, XXXXXXX, XXXXXXX, RGB_HUD, RGB_SAD, RGB_VAD, \
-                             _______, _______, _______, _______, _______,  _______, _______, _______ \
+  LED_FLASH,RGB_M_P,RGB_M_G, RGB_M_SW,RGB_M_R, RGB_M_B,                   RGB_M_SN,RGB_M_K, RGB_M_TW,XXXXXXX, XXXXXXX, RGB_TOG, \
+  LED_RED, LED_YEL, LED_GRE, LED_CYA, LED_BLU, LED_MAG,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  LED_ORA, LED_CHA, LED_SPR, LED_AZU, LED_VLT, LED_RSE,                   LED_MAX, XXXXXXX, XXXXXXX, RGB_HUI, RGB_SAI, RGB_VAI, \
+  KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,RGB_RMOD, RGB_MOD, LED_MIN, XXXXXXX, XXXXXXX, RGB_HUD, RGB_SAD, RGB_VAD, \
+                            _______, _______, _______,TG(_LEDS),TG(_LEDS),_______, _______, _______ \
   ),
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -126,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, \
   KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, \
                              _______, _______, _______, _______, _______,  _______, _______, _______ \
-  )
+  ),
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -193,12 +213,69 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_RIGHT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
             else { /* when keycode is released */ }
             break;
+
         case M1M1M1:
             if (record->event.pressed)
                 M1M1M1_active = true;
             else
                 M1M1M1_active = false;
             break;
+
+        #ifdef RGBLIGHT_ENABLE
+        // LED layer specials
+        // would be better with keycode macro like LED_H(hue_value)
+        case LED_RED:
+            rgblight_sethsv(0, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_YEL:
+            rgblight_sethsv(43, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_GRE:
+            rgblight_sethsv(85, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_CYA:
+            rgblight_sethsv(127, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_BLU:
+            rgblight_sethsv(169, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_MAG:
+            rgblight_sethsv(201, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_ORA:
+            rgblight_sethsv(21, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_CHA:
+            rgblight_sethsv(64, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_SPR:
+            rgblight_sethsv(106, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_AZU:
+            rgblight_sethsv(148, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_VLT:
+            rgblight_sethsv(180, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_RSE:
+            rgblight_sethsv(222, rgblight_get_sat(), rgblight_get_val());
+            break;
+        case LED_FLASH:
+            if (record->event.pressed) {
+                LED_FLASH_prev_value = rgblight_get_val();
+                rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), LED_FLASH_prev_value > 0 ? 0 : 255);
+            }
+            else {
+                rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), LED_FLASH_prev_value);
+            }
+            break;
+        case LED_MIN:
+            rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), 0);
+            break;
+        case LED_MAX:
+            rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), 255);
+            break;
+        #endif
     }
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
