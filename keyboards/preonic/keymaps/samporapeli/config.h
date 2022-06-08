@@ -34,3 +34,10 @@
 
 /* override number of MIDI tone keycodes (each octave adds 12 keycodes and allocates 12 bytes) */
 //#define MIDI_TONE_KEYCODE_OCTAVES 2
+
+// mouse keys
+#define MOUSEKEY_INTERVAL 16
+#define MOUSEKEY_DELAY 0
+#define MOUSEKEY_MOVE_DELTA 4
+#define MOUSEKEY_TIME_TO_MAX 80
+#define MOUSEKEY_MAX_SPEED 16
