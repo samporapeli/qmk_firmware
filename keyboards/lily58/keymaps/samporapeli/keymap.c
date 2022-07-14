@@ -327,4 +327,16 @@ void matrix_scan_user(void)
 {
     if (M1M1M1_active)
         tap_code16(KC_MS_BTN1);
+  }
+}
+#endif // OLED_DRIVER_ENABLE
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (record->event.pressed) {
+#ifdef OLED_DRIVER_ENABLE
+    set_keylog(keycode, record);
+#endif
+    // set_timelog();
+  }
+  return true;
 }
