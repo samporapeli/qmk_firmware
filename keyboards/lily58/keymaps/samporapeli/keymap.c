@@ -32,6 +32,8 @@ enum custom_keycodes {
     LED_FLASH,
     LED_MIN,
     LED_MAX,
+    MACRO_A,
+    MACRO_B,
 };
 
 bool M1M1M1_active = false;
@@ -87,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 /* RAISE
  * ,-----------------------------------------.                    ,-----------------------------------------.
- * |      |      |      |      |      |      |                    |      |      |      |      |      | CADel|
+ * |      |      |      |      |      |      |                    |MACROA|MACROB|      |      |      | CADel|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |      |      |      |      |                    |      | HOME | PGDN | PGUP | END  |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -101,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_RAISE] = LAYOUT( \
-  _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, CADEL, \
+  _______, _______, _______, _______, _______, _______,                     MACRO_A, MACRO_B, _______, _______, _______, CADEL, \
   _______, _______, _______, _______, _______, _______,                     _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______, \
   _______, _______, _______, _______, _______, _______,                      CSLEFT, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CSRIGHT, \
   _______, _______, _______, _______, _______, _______,   FI_LCBR, FI_RCBR, FI_PLUS, FI_MINS, FI_LABK, FI_RABK, FI_EQL,  FI_BSLS, \
@@ -243,6 +245,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 M1M1M1_active = true;
             else
                 M1M1M1_active = false;
+            break;
+
+        case MACRO_A:
+            if (record->event.pressed)
+                SEND_STRING(SS_TAP(X_RIGHT)SS_DOWN(X_LALT)SS_DELAY(40)SS_TAP(X_TAB)SS_DELAY(40)SS_DELAY(40)SS_UP(X_LALT)SS_DELAY(40) SS_TAP(X_RIGHT) SS_DOWN(X_LALT)SS_DELAY(40)SS_TAP(X_TAB)SS_DELAY(40)SS_UP(X_LALT));
+            else {}
+            break;
+        case MACRO_B:
+            if (record->event.pressed)
+                SEND_STRING(SS_TAP(X_LEFT)SS_DOWN(X_LALT)SS_DELAY(40)SS_TAP(X_TAB)SS_DELAY(40)SS_DELAY(40)SS_UP(X_LALT)SS_DELAY(40) SS_TAP(X_LEFT) SS_DOWN(X_LALT)SS_DELAY(40)SS_TAP(X_TAB)SS_DELAY(40)SS_UP(X_LALT)SS_DELAY(40));
+            else {}
             break;
 
         #ifdef RGBLIGHT_ENABLE
