@@ -62,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  FI_1,   FI_2,    FI_3,    FI_4,    FI_5,                     FI_6,    FI_7,    FI_8,    FI_9,    FI_0,    FI_PLUS, \
   KC_CAPS, FI_ODIA,KC_COMM, KC_DOT,  KC_P,    KC_Y,                     KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    FI_QUOT, \
   KC_LSFT, KC_A,   KC_O,    KC_E,    KC_U,    KC_I,                     KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    MT(MOD_RSFT, FI_MINS), \
-  KC_LCTRL, FI_ADIA,KC_Q,    KC_J,    KC_K,    KC_X, FI_ARNG, MT(MOD_RCTL, FI_LABK),   KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RCTL, \
+  KC_LCTL, FI_ADIA,KC_Q,    KC_J,    KC_K,    KC_X, FI_ARNG, MT(MOD_RCTL, FI_LABK),   KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RCTL, \
                         KC_LALT, KC_LGUI, MO(_LOWER), KC_SPC, KC_ENT, MO(_RAISE), KC_BSPC, KC_ALGR \
 ),
 /* LOWER
@@ -181,7 +181,7 @@ const char *read_rgb_info(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
-void oled_task_user(void) {
+bool oled_task_user(void) {
   if (is_keyboard_master()) {
     // If you want to change the display of OLED, you need to change here
     oled_write_ln(read_layer_state(), false);
@@ -195,6 +195,7 @@ void oled_task_user(void) {
     oled_write(read_logo(), false);
     oled_write_ln("       sampo.website", false);
   }
+  return false;
 }
 #endif // OLED_ENABLE
 
@@ -205,19 +206,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case CADEL:
             // when keycode is pressed
             if (record->event.pressed)
-                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTRL));
+                tap_code16(LCTL(LALT(KC_DEL)));
             else { /* when keycode is released */ }
             break;
 
         case CSLEFT:
             if (record->event.pressed)
-                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_LEFT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
+                tap_code16(LCTL(LGUI(KC_LEFT)));
             else { /* when keycode is released */ }
             break;
 
         case CSRIGHT:
             if (record->event.pressed)
-                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_RIGHT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
+                tap_code16(LCTL(LGUI(KC_RIGHT)));
             else { /* when keycode is released */ }
             break;
 
@@ -256,111 +257,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed)
                 SEND_STRING(SS_TAP(X_LEFT)SS_DOWN(X_LALT)SS_DELAY(40)SS_TAP(X_TAB)SS_DELAY(40)SS_DELAY(40)SS_UP(X_LALT)SS_DELAY(40) SS_TAP(X_LEFT) SS_DOWN(X_LALT)SS_DELAY(40)SS_TAP(X_TAB)SS_DELAY(40)SS_UP(X_LALT)SS_DELAY(40));
             else {}
-            break;
-
-        #ifdef RGBLIGHT_ENABLE
-        // LED layer specials
-        // would be better with keycode macro like LED_H(hue_value)
-        case LED_RED:
-            rgblight_sethsv(0, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_YEL:
-            rgblight_sethsv(43, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_GRE:
-            rgblight_sethsv(85, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_CYA:
-            rgblight_sethsv(127, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_BLU:
-            rgblight_sethsv(169, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_MAG:
-            rgblight_sethsv(201, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_ORA:
-            rgblight_sethsv(21, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_CHA:
-            rgblight_sethsv(64, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_SPR:
-            rgblight_sethsv(106, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_AZU:
-            rgblight_sethsv(148, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_VLT:
-            rgblight_sethsv(180, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_RSE:
-            rgblight_sethsv(222, rgblight_get_sat(), rgblight_get_val());
-            break;
-        case LED_FLASH:
-            if (record->event.pressed) {
-                LED_FLASH_prev_value = rgblight_get_val();
-                rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), LED_FLASH_prev_value > 0 ? 0 : 255);
-            }
-            else {
-                rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), LED_FLASH_prev_value);
-            }
-            break;
-        case LED_MIN:
-            rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), 0);
-            break;
-        case LED_MAX:
-            rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), 255);
-            break;
-        #endif
-    }
-    if (record->event.pressed) {
-#ifdef OLED_ENABLE
-        set_keylog(keycode, record);
-#endif
-        // set_timelog();
-    }
-    return true;
-}
-
-void matrix_scan_user(void)
-{
-    if (M1M1M1_active)
-        tap_code16(KC_MS_BTN1);
-  }
-}
-#endif // OLED_ENABLE
-
-// https://beta.docs.qmk.fm/using-qmk/advanced-keycodes/feature_macros
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        // send control-alt-delete
-        case CADEL:
-            // when keycode is pressed
-            if (record->event.pressed)
-                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTRL));
-            else { /* when keycode is released */ }
-            break;
-
-        case CSLEFT:
-            if (record->event.pressed)
-                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_LEFT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
-            else
-                // released
-            break;
-
-        case CSRIGHT:
-            if (record->event.pressed)
-                SEND_STRING(SS_DOWN(X_LCTRL)SS_DOWN(X_LGUI)SS_TAP(X_RIGHT)SS_UP(X_LGUI)SS_UP(X_LCTRL));
-            else
-                // released
-            break;
-
-        case M1M1M1:
-            if (record->event.pressed)
-                M1M1M1_active = true;
-            else
-                M1M1M1_active = false;
             break;
 
         #ifdef RGBLIGHT_ENABLE
