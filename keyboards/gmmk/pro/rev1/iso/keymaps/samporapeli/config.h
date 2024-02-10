@@ -1,2 +1,2 @@
-// enable reactive rgb effects
 #define RGB_MATRIX_KEYPRESSES
+#undef ENCODER_DEFAULTACTIONS_ENABLE
