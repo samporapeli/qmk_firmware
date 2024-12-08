@@ -3,10 +3,11 @@
 
 enum layer_number {
   _DVORAK = 0,
+  _QWERTY,
   _LOWER,
   _RAISE,
-  _LEDS,
   _ADJUST,
+  _LEDS,
 };
 
 enum custom_keycodes {
@@ -50,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | CAPS |   Ö  |   ,  |   .  |   P  |   Y  |                    |   F  |   G  |   C  |   R  |   L  |  '   |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |LShift|   A  |   O  |   U  |   E  |   I  |-------.    ,-------|   D  |   H  |   T  |   N  |   S  |RSft/-|
- * |------+------+------+------+------+------|   Å   |    |   <   |------+------+------+------+------+------|
+ * |------+------+------+------+------+------| RCtrl |    |   <   |------+------+------+------+------+------|
  * |LCtrl |   Ä  |   Q  |   J  |   K  |   X  |-------|    |-------|   B  |   M  |   W  |   V  |   Z  |RCtrl |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP|Alt gr|
@@ -62,7 +63,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  FI_1,   FI_2,    FI_3,    FI_4,    FI_5,                     FI_6,    FI_7,    FI_8,    FI_9,    FI_0,    FI_PLUS, \
   KC_CAPS, FI_ODIA,KC_COMM, KC_DOT,  KC_P,    KC_Y,                     KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    FI_QUOT, \
   KC_LSFT, KC_A,   KC_O,    KC_E,    KC_U,    KC_I,                     KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    MT(MOD_RSFT, FI_MINS), \
-  KC_LCTL, FI_ADIA,KC_Q,    KC_J,    KC_K,    KC_X, FI_ARNG, MT(MOD_RCTL, FI_LABK),   KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RCTL, \
+  KC_LCTL, FI_ADIA,KC_Q,    KC_J,    KC_K,    KC_X, KC_RCTL, MT(MOD_RCTL, FI_LABK),   KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RCTL, \
+                        KC_LALT, KC_LGUI, MO(_LOWER), KC_SPC, KC_ENT, MO(_RAISE), KC_BSPC, KC_ALGR \
+),
+ /* QWERTY
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * | TAB  |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |  +   |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * | CAPS |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  |  Ö   |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |LShift|   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   Ä  |RSft/-|
+ * |------+------+------+------+------+------| RCtrl |    |   <   |------+------+------+------+------+------|
+ * |LCtrl |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   '  |RCtrl |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP|Alt gr|
+ *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+
+ [_QWERTY] = LAYOUT( \
+  KC_TAB,  FI_1,   FI_2,    FI_3,    FI_4,    FI_5,                     FI_6,    FI_7,    FI_8,    FI_9,    FI_0,    FI_PLUS, \
+  KC_CAPS, KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    FI_ODIA, \
+  KC_LSFT, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    FI_ADIA, MT(MOD_RSFT, FI_MINS), \
+  KC_LCTL, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_RCTL, MT(MOD_RCTL, FI_LABK),   KC_N,    KC_M,    KC_COMM, KC_DOT,  FI_QUOT, KC_RCTL, \
                         KC_LALT, KC_LGUI, MO(_LOWER), KC_SPC, KC_ENT, MO(_RAISE), KC_BSPC, KC_ALGR \
 ),
 /* LOWER
@@ -73,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |  M1  |M Left|M Down| M Up |M Rght|  M2  |-------.    ,-------|  m^  |   &  |   [  |   ]  |   *  |   @  |
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
- * |  M3  |M1M1M1|      |      |  §   |  ¨/^ |-------|    |-------|  m~  |   _  |   (  |   )  |   #  |   |  |
+ * |  M3  |M1M1M1|      |   Å  |  §   |  ¨/^ |-------|    |-------|  m~  |   _  |   (  |   )  |   #  |   |  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP|Alt Gr|
  *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -83,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                                    KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
   KC_ESC,  KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_UP, KC_MS_WH_RIGHT, FI_ACUT,           BCKTCK,  FI_EXLM, FI_LCBR, FI_RCBR, FI_DLR,  FI_PERC, \
   KC_MS_BTN1,  KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP, KC_MS_RIGHT, KC_MS_BTN2,M_CIRC, FI_AMPR,FI_LBRC, FI_RBRC, FI_ASTR, FI_AT, \
-  KC_MS_BTN3, M1M1M1, _______, _______, FI_SECT, FI_DIAE,FI_LBRC,               FI_RBRC, TILDE, FI_UNDS, FI_LPRN, FI_RPRN, FI_HASH, FI_PIPE, \
+  KC_MS_BTN3, M1M1M1, _______, FI_ARNG, FI_SECT, FI_DIAE,FI_LBRC,               FI_RBRC, TILDE, FI_UNDS, FI_LPRN, FI_RPRN, FI_HASH, FI_PIPE, \
 
                              _______, _______, _______, _______, _______, _______, _______, _______\
 ),
@@ -97,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|   {   |    |    }  |------+------+------+------+------+------|
  * |      |      |      |      |      |      |-------|    |-------|   +  |   -  |   <  |   >  |   =  |   \  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |Delete|Alt Gr|
+ *                   | LAlt | LGUI |LOWER | /BackSP /       \Enter \  |RAISE |Delete|Alt Gr|
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
@@ -107,7 +130,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______,                     _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______, \
   _______, _______, _______, _______, _______, _______,                      CSLEFT, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CSRIGHT, \
   _______, _______, _______, _______, _______, _______,   FI_LCBR, FI_RCBR, FI_PLUS, FI_MINS, FI_LABK, FI_RABK, FI_EQL,  FI_BSLS, \
-                             _______, _______, _______,  _______, _______,  _______, KC_DEL,  _______ \
+                             _______, _______, _______,  KC_BSPC, _______,  _______, KC_DEL,  _______ \
 ),
 /* LEDS
  * https://docs.qmk.fm/#/feature_rgblight?id=keycodes
@@ -138,9 +161,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      |      |      |      |      |-------.    ,-------|      |      |MODE+ | HUE+ | SAT+ | VAL+ |
+ * |      |      |      |      |      |      |-------.    ,-------|QWERTY|      |MODE+ | HUE+ | SAT+ | VAL+ |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
- * |LShift|      |      |      |      |      |-------|    |-------|      |      |MODE- | HUE- | SAT- | VAL- |
+ * |LShift|      |      |      |      |      |-------|    |-------|DVORAK|      |MODE- | HUE- | SAT- | VAL- |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
  *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -149,8 +172,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ADJUST] = LAYOUT( \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   TG(_LEDS), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_TOG, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, \
-  KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   DF(_QWERTY), XXXXXXX, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, \
+  KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(_DVORAK), XXXXXXX, RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, \
                              _______, _______, _______, _______, _______,  _______, _______, _______ \
   ),
 };
@@ -169,7 +192,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 // When you add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
+const char *read_layer_state(layer_state_t current_base_layer);
 const char *read_logo(void);
 void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
@@ -181,12 +204,21 @@ const char *read_rgb_info(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
+// Keep track of the current base layer to display its name
+// Moreover, read_layer_state() has been modified to take the base layer state as an argument
+layer_state_t current_base_layer;
+// run every time the base layer changes (https://docs.qmk.fm/feature_layers)
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+  current_base_layer = get_highest_layer(state);
+  return state;
+}
+
 bool oled_task_user(void) {
   if (is_keyboard_master()) {
     // If you want to change the display of OLED, you need to change here
-    oled_write_ln(read_layer_state(), false);
+    oled_write_ln(read_layer_state(current_base_layer), false);
     oled_write_ln(read_keylog(), false);
-    oled_write_ln(read_keylogs(), false);
+    oled_write_ln(/*read_keylogs()*/"key log redacted", false);
     oled_write_ln(read_rgb_info(), false);
     //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
     //oled_write_ln(read_host_led_state(), false);
